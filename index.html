@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,27 +13,81 @@
 
 
 <body>
-    
-    <div class="header">
-        <img src="imagens/logo-uol.png" >
-        <ion-icon name="people"></ion-icon>
+
+    <div class="entrada">
+        <img src="/imagens/logo-uol-entrada.png">
+
+        <input type="text" placeholder="Digite seu nome">
+
+        <div>Entrar</div>
+
     </div>
 
-    <ul>
-        <li class="entrou"> <span>(09:21:45)</span> joão entrou</li>
-        <li>to na area</li>
-        <li>quer tc?</li>
-        <li class="reservada">bora tomar litrão</li>
+
+    <div class="overlay"></div>
+
+    <div class="menu">
+        <div class="menu-header">Escolha um contato 
+            para enviar mensagem:</div>
+
+        <ul>
+            <li class="menu-li">
+                <ion-icon name="people"></ion-icon>
+                <span>Todos</span> 
+            </li>
+
+            <li class="menu-li">
+                <ion-icon name="person-circle"></ion-icon>
+                <span>João</span> 
+                <img src="/imagens/check.png">
+                
+            </li>
+
+            <li class="menu-li">
+                <ion-icon name="person-circle"></ion-icon>
+                <span>Maria</span>
+            </li>
+        </ul>
+
+        <div class="menu-header">Escolha a visibilidade:</div>
+
+        <ul>
+            <li class="menu-li">
+                <ion-icon name="lock-open"></ion-icon>
+                <span>Todos</span> 
+                <img src="/imagens/check.png">
+
+            </li>
+
+            <li class="menu-li">
+                <ion-icon name="lock-closed"></ion-icon>
+                <span>João</span> 
+                
+            </li>
+
+        </ul>
+
+
+
+    </div>
+
+    <div class="header">
+        <img src="imagens/logo-uol.png">
+        <ion-icon name="people" onclick="chamarMenu()"></ion-icon>
+    </div>
+
+    <ul class="board">
+        
     </ul>
 
 
 
 
     <div class="footer">
-        <input type="text" 
-        class="msg"
-        placeholder="Escreva...">
+        <input type="text" class="msg" placeholder="Escreva...">
+
         <!-- VER COMO DIFERENCIA LETRA DO PLACEHOLDER COM A DO DIGITANDO -->
+
         <ion-icon name="paper-plane-outline" onclick="enviar()"></ion-icon>
     </div>
 
@@ -47,10 +102,11 @@
     <ion-icon name="people"></ion-icon>
     <ion-icon name="person-circle"></ion-icon> 
     <ion-icon name="lock-open"></ion-icon>
-    <ion-icon name="lock-open"></ion-icon>    
+    <ion-icon name="lock-closed"></ion-icon>    
 -->
 
     <script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
     <script src="scripts.js"></script>
 </body>
+
 </html>

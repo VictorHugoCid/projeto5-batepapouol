@@ -4,106 +4,241 @@
 font-family: 'Roboto', sans-serif;
  */
 
- *{
-    box-sizing: border-box;
- }
-
-body{
-    background-color: #e5e5e5;
-    font-family: 'Roboto', sans-serif;
-    padding-top: 106px;
+* {
+   box-sizing: border-box;
 }
 
- .header{
-    width: 100%;
-    height: 80px;
-    background-color: #ffffff;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    position: fixed;
-    top: 0;
- }
-
- .footer{
-    width: 100%;
-    height: 80px;
-    background-color: #ffffff;
-    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    position: fixed;
-    bottom: 0;
-
- }
-
- .header img{
-    margin-left: 20px;
- }
-
- .header ion-icon {
-    width: 45px;
-    height: 45px;
-    margin-right: 20px;
-
- }
-
-input{
-    margin-left: 20px;
-    width: 100%;
-    height: 30px;
-
-    font-style: italic;
-    font-weight: 700;
-    color: black;
-    
- }
-
- .footer ion-icon{
-    width: 26px;
-    height: 26px;
-    margin-right: 20px;
-    margin-left: 15px;
- }
-
-
- li{
-    width: 100%;
-    height: 50px;
-    background-color: #ffffff;
-    margin-bottom: 4px;
-
-    display: flex;
-    align-items: center;
-
-    font-size: 14px;
-    font-weight: 700;
- }
-
- span{
-    margin-right: 10px;
-    margin-left: 10px;
-    color: #AAAAAA;
-
-    font-weight: 400;
- }
-
-.entrou, .saiu {
-    background-color: #dcdcdc;
-    border-radius: 2px;
+body {
+   background-color: #e5e5e5;
+   font-family: 'Roboto', sans-serif;
+   padding-top: 106px;
+   padding-bottom: 106px;
 }
 
-.reservada{
-    background-color:#ffdede;
-    border-radius: 2px;
+.header {
+   width: 100%;
+   height: 80px;
+   background-color: #ffffff;
+   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
+
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+
+   position: fixed;
+   top: 0;
 }
 
-strong{
-    font-weight: 900;
+.footer {
+   width: 100%;
+   height: 80px;
+   background-color: #ffffff;
+   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
+
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+
+   position: fixed;
+   bottom: 0;
+
+}
+
+.header img {
+   margin-left: 20px;
+}
+
+.header ion-icon {
+   width: 45px;
+   height: 45px;
+   margin-right: 20px;
+
+}
+
+input {
+   margin-left: 20px;
+   width: 100%;
+   height: 30px;
+
+   font-style: italic;
+   font-weight: 700;
+   color: black;
+
+}
+
+.footer ion-icon {
+   width: 26px;
+   height: 26px;
+   margin-right: 20px;
+   margin-left: 15px;
+}
+
+ul.board {
+   overflow-y: hidden;
+   
+}
+
+li {
+   width: 100%;
+   min-height: 50px;
+   height: auto;
+   background-color: #ffffff;
+   margin-bottom: 4px;
+
+
+   display: flex;
+   align-items: center;
+
+   font-size: 14px;
+   font-weight: 700;
+}
+
+span.tempo {
+   margin-right: 10px;
+   margin-left: 10px;
+   color: #AAAAAA;
+
+   font-weight: 400;
+}
+
+span {
+   margin-left: 5px;
+   margin-right: 5px;
+   font-weight: 400;
+   color: black;
+   overflow-wrap: break-word;
+   
+}
+
+.entrou,
+.saiu {
+   background-color: #dcdcdc;
+   border-radius: 2px;
+}
+
+.reservada {
+   background-color: #ffdede;
+   border-radius: 2px;
+}
+
+strong {
+   font-weight: 900;
+}
+
+/* bonus */
+/* overlay e menu */
+
+.overlay{
+   width: 100%;
+   height: 100%;
+   background-color: black;
+   opacity: 0.8;
+
+   position: fixed;
+   top: 0;
+   right: -100%;
+   z-index: 1;
+
+   transition: all 1s;
+
+}
+
+.menu{
+   height: 100%;
+   width: 70%;
+   background-color: #ffffff;
+
+   position: fixed;
+   z-index: 2;
+   right: -70%;
+   top: 0;
+
+   transition: all 1s;
+
+}
+
+.show-menu{
+   right: 0;
+}
+
+.menu-header{
+   width: 100%;
+   height: 84px;
+   padding-right: 90px;
+   padding-left: 90px;
+   text-align: center;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   font-size: 16px;
+   font-weight: 700;
+}
+
+.menu-li{
+   margin-left: 10px;
+   font-size: 16px;
+   font-weight: 400;
+}
+
+.menu-li ion-icon{
+   width: 25px;
+   height: 25px;
+   margin-right: 10px;
+
+   position: relative;
+}
+
+.menu-li img{
+   position: absolute;
+   right: 20px;
+   
+}
+
+/* Entrada */
+
+.entrada{
+   width: 100%;
+   height: 100%;
+   background-color: #ffffff;
+
+   position: fixed;
+   top: 0;
+   right: 0;
+   z-index: 1;
+
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+
+}
+.entrada img{
+   width: 35%;
+   margin-top:11% ;
+   
+}
+
+.entrada input{
+   width: 75%;
+   height: 8%;
+   border-radius: 4px;
+   border: 1px solid #aeaeae;
+   text-align: center;
+   margin-bottom: 15px;
+
+   font-size: 18px;
+   font-weight: 400;
+
+   margin-top: calc(100%/2 - 12%);
+
+}
+
+.entrada div{
+   background-color: #e5e5e5;
+   border-radius: 15px;
+   width: 30%;
+   height: 7%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
