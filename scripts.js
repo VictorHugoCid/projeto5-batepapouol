@@ -1,46 +1,84 @@
 
-let msgServidor = [
-    { time: "09:21:45", tipo: "entrou", nome: "João", texto: "entrou", destino: "" },
-    { time: "09:21:45", tipo: "entrou", nome: "Maria", texto: "entrou", destino: "" },
-    { time: "09:21:45", tipo: "default", nome: "Pedro", texto: "bora marcar o churrasco da T7", destino: "Todos" },
-    { time: "09:21:45", tipo: "reservada", nome: "João", texto: "se alguém falar bem do piratinha vai ter agressão", destino: "Maria" },
-    { time: "09:21:45", tipo: "default", nome: "Evelyn", texto: "PIRATINHA>>>>>>>>>narutinho", destino: "Todos" },
-    { time: "09:21:45", tipo: "default", nome: "Maria", texto: "errou feio, errou rude", destino: "Todos" },
-    { time: "09:21:45", tipo: "default", nome: "João", texto: "deu ruim", destino: "Todos" },
-    { time: "09:21:45", tipo: "default", nome: "Rod", texto: "guerra de anime no churras!", destino: "Todos" }
-]
 
-// Plotar no DOM mensagens do servidor, o botão enviar vai somar apenar +1
-plotarDoServidor();
+//    "https://mock-api.driven.com.br/api/v6/uol/messages"
+
+let msgServidor = [];
+buscarMensagens();
+
+// etapa 1 - buscar msgs no servidor (API)
+function buscarMensagens() {
+    console.log(`ordem de execução 1 - buscarMensagens`)
+    const promessa = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
+
+    promessa.then(popularMsgServidor);
+
+}
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// etapa 2 - Jogar as mensagens do API na variável msgServidor
+
+function popularMsgServidor(resposta){
+    console.log(`ordem de execução 2 - popularMsgServidor`)
+    //console.log(resposta)
+
+    msgServidor = resposta.data
+
+    plotarDoServidor();
+
+}
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// etapa 3 - itera o array msgServidor
 
 function plotarDoServidor() {
 
-    let ul = document.querySelector("ul.board");
 
-    ul.innerHTML = ``
+    console.log("orden de execução 3 - plotarDoServidor")
+
+    let ul = document.querySelector("ul.board");
+/* {
+    from: "João",
+    to: "Todos",
+    text: "entra na sala...",
+    type: "status",
+    time: "08:01:17"
+} */
+
+    ul.innerHTML = ``;
     for (let i = 0; i < msgServidor.length; i++) {
 
-        if (msgServidor[i].reservada !== "") {
+        if (msgServidor[i].type !== "status") {
             ul.innerHTML += ` 
-            <li class="${msgServidor[i].tipo}">
+            <li class="${msgServidor[i].type}">
                 <span class="tempo">(${msgServidor[i].time})</span>
-                ${msgServidor[i].nome} 
-                <span> para </span> 
-                ${msgServidor[i].destino}
-                <span>${msgServidor[i].texto}</span>
+                    ${msgServidor[i].from} 
+                <span> 
+                    para 
+                </span> 
+                    ${msgServidor[i].to}
+                <span>${msgServidor[i].text}</span>
             </li>
             `;
         } else {
             ul.innerHTML += ` 
-            <li class="${msgServidor[i].tipo}">
+            <li class="${msgServidor[i].type}">
                 <span class="tempo">(${msgServidor[i].time})</span>
-                ${msgServidor[i].nome} 
-                <span>${msgServidor[i].texto}</span>
+                ${msgServidor[i].from} 
+                <span>${msgServidor[i].text}</span>
             </li>
             `;
         }
     }
+
+
 }
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// etapa 4 - cadastra msg para enviar AINDA NAO VOU FOCAR AQUI
 
 //let namePrompt = prompt("diga seu lindo nome")
 let namePrompt = "Victor"
@@ -52,20 +90,47 @@ function enviar() {
     msg = msgInput.value
 
     // colocar a msg no Objeto, nao consegui de outra forma
-    const msgObj = {
-        time: hora(),
-        //tipo: [{tipo: "entrou"}, {tipo: "saiu"}, {tipo: "default"}, {tipo: "reservada"}],
-        tipo: "default",
-        nome: namePrompt,
-        texto: msg,
-        destino: "Todos"
+    const novaMsg = {
+        //type: [{tipo: "status"}, {tipo: "message"}, {tipo: "private_message"}, {tipo: "reservada"}],
+        from: namePrompt,
+        to: "Todos",
+        text: msg,
+        type: "default"       
     }
     hora();
 
-    msgServidor.push(msgObj)
-    plotarDoServidor();
+    //msgServidor.push(msgObj)
+    //plotarDoServidor();
+
+    // etapa 5 - Mandar o post pro servidor
+    const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages`,novaMsg);
+
+    // etapa 6 - tratar erros/acertos
+
+    promise
+        .catch(alertaErro)
+        .then(buscarMensagens)
+
 }
 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+function alertaErro(error){
+    alert("aconteceu algo")
+
+    console.log(error.response.status);
+    if (error.response.status === 404) {
+      alert("Não foi encontrado!");
+    }
+    //Quando falta algum campo na receita
+    if (error.response.status === 422) {
+      alert("Verique todos os campos da receita!");
+    }
+    //Quando o título já existe
+    if (error.response.status === 409) {
+      alert("Já existe uma receita com esse título!");
+    }
+}
 
 function hora() {
 
@@ -78,7 +143,6 @@ function hora() {
     //console.log(time)
     return time
 }
-
 
 function chamarMenu() {
 
@@ -96,5 +160,6 @@ function analisarCheck() {
     /* ESSA FUNÇÃO É PRO BONUS
     QUANDO TIVER COM CHECK NO MENU
     VAI AVISAR NO INPUT PRA QUEM ESTÁ ENVIANDO
-    E O TIPO DA MSG */ 
+    E O TIPO DA MSG */
 }
+
