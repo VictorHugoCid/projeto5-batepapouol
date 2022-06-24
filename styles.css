@@ -117,13 +117,12 @@ span {
    
 }
 
-.entrou,
-.saiu {
+.status {
    background-color: #dcdcdc;
    border-radius: 2px;
 }
 
-.reservada {
+.private_message {
    background-color: #ffdede;
    border-radius: 2px;
 }
@@ -199,8 +198,21 @@ strong {
 .menu-li img{
    position: absolute;
    right: 20px;
-   
+
+
 }
+
+.hidden{
+   opacity: 0;
+   transition: all 0.5s;
+}
+
+.check{
+   opacity: 1;
+   transition: all 0.5s;
+}
+
+
 
 /* Entrada */
 

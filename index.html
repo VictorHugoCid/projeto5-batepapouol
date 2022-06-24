@@ -13,7 +13,7 @@
 
 
 <body>
-
+    <!-- ENTRADA -->
    <!--  <div class="entrada">
         <img src="/imagens/logo-uol-entrada.png">
 
@@ -23,45 +23,43 @@
 
     </div> -->
 
+    <!-- MENU e OVERLAY -->
 
     <div class="overlay"></div>
 
     <div class="menu">
+
         <div class="menu-header">Escolha um contato
             para enviar mensagem:</div>
 
-        <ul>
-            <li class="menu-li">
-                <ion-icon name="people"></ion-icon>
-                <span>Todos</span>
-            </li>
+        <ul class="participantes">
+            
+                <li class="menu-li" onclick="selecionarContato(this)">
+                    <ion-icon name="people"></ion-icon>
+                    <span>Todos</span>
+                    <img src="/imagens/check.png" class="hidden">
+                </li>
 
-            <li class="menu-li">
-                <ion-icon name="person-circle"></ion-icon>
-                <span>João</span>
-                <img src="/imagens/check.png">
-
-            </li>
-
-            <li class="menu-li">
-                <ion-icon name="person-circle"></ion-icon>
-                <span>Maria</span>
-            </li>
+            <div>
+            
+            </div>
+            
         </ul>
 
         <div class="menu-header">Escolha a visibilidade:</div>
 
-        <ul>
-            <li class="menu-li">
+        <ul class="messageStatus">
+            <li class="menu-li" onclick="selecionarStatus(this)">
                 <ion-icon name="lock-open"></ion-icon>
                 <span>Todos</span>
-                <img src="/imagens/check.png">
+                <img src="/imagens/check.png" class="hidden">
 
             </li>
 
-            <li class="menu-li">
+            <li class="menu-li" onclick="selecionarStatus(this)">
                 <ion-icon name="lock-closed"></ion-icon>
-                <span>João</span>
+                <span>Privada</span>
+                <img src="/imagens/check.png" class="hidden">
 
             </li>
 
@@ -70,6 +68,8 @@
 
 
     </div>
+
+    <!-- BATE PAPO -->
 
     <div class="header">
         <img src="imagens/logo-uol.png">
@@ -79,9 +79,6 @@
     <ul class="board">
 
     </ul>
-
-
-
 
     <div class="footer">
         <input type="text" class="msg" placeholder="Escreva...">

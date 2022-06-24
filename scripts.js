@@ -4,13 +4,17 @@
 
 //let namePrompt = prompt("diga seu lindo nome")
 let namePrompt = {
-    name: "Victor Hugo"
-}  
+    name: "e"
+}
 
 let msgServidor = [];
+let participantes = [];
 
 logar();
-function logar(){
+buscarParticipantes();
+//setInterval(manterLog, 5000)
+
+function logar() {
 
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/participants`, namePrompt)
 
@@ -19,48 +23,47 @@ function logar(){
         .then(buscarMensagens)
 }
 
+function manterLog() {
+    const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/status`, namePrompt)
+
+}
 // etapa 1 - buscar msgs no servidor (API)
 function buscarMensagens() {
     console.log(`ordem de execução 1 - buscarMensagens`)
     const promessa = axios.get(`https://mock-api.driven.com.br/api/v6/uol/messages`);
 
-    promessa.then(popularMsgServidor);
+    promessa
+        .catch(alertaErro)
+        .then(popularMsgServidor);
 }
 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // etapa 2 - Jogar as mensagens do API na variável msgServidor
 
-function popularMsgServidor(resposta){
+function popularMsgServidor(resposta) {
     console.log(`ordem de execução 2 - popularMsgServidor`)
     //console.log(resposta)
-
     msgServidor = resposta.data
 
     plotarDoServidor();
 
 }
-
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 // etapa 3 - itera o array msgServidor
 
 function plotarDoServidor() {
 
 
     console.log("orden de execução 3 - plotarDoServidor")
-    console.log(msgServidor)
+    //console.log(msgServidor)
 
     let ul = document.querySelector("ul.board");
 
-/* {
-    from: "João",
-    to: "Todos",
-    text: "entra na sala...",
-    type: "status",
-    time: "08:01:17"
-} */
+    /* {
+        from: "João",
+        to: "Todos",
+        text: "entra na sala...",
+        type: "status",
+        time: "08:01:17"
+    } */
 
     ul.innerHTML = ``;
     for (let i = 0; i < msgServidor.length; i++) {
@@ -87,15 +90,9 @@ function plotarDoServidor() {
             `;
         }
     }
-
-
 }
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 // etapa 4 - cadastra msg para enviar AINDA NAO VOU FOCAR AQUI
-
-
 let msg;
 
 function enviar() {
@@ -103,55 +100,82 @@ function enviar() {
     const msgInput = document.querySelector(".msg");
 
     msg = msgInput.value
-    console.log(msg)
-
-    // colocar a msg no Objeto, nao consegui de outra forma
-    /*     {
-        from: "nome do usuário",
-        to: "nome do destinatário (Todos se não for um específico)",
-        text: "mensagem digitada",
-        type: "message" // ou "private_message" para o bônus
-    } */
 
     const novaMsg = {
         from: namePrompt.name,
         to: "Todos",
         text: msg,
-        type: "private_message"       
+        type: "message"
     }
-
     hora();
-
-    console.log(novaMsg)
     // etapa 5 - Mandar o post pro servidor
-    const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages`,novaMsg);
-
+    const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages`, novaMsg);
     // etapa 6 - tratar erros/acertos
-
     promise
         .catch(alertaErro)
         .then(buscarMensagens)
-
 }
 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+function buscarParticipantes() {
+    const promise = axios.get(`https://mock-api.driven.com.br/api/v6/uol/participants`)
+    promise
+        .catch(alertaErro)
+        .then(popularParticipantes)
+}
 
-function alertaErro(error){
-    alert("aconteceu algo")
+function popularParticipantes(resposta) {
+    participantes = resposta.data
+    plotarParticipantes();
+}
+
+function plotarParticipantes() {
+
+    divzin = document.querySelector(".participantes div")
+    //console.log(divzin)
+
+    divzin.innerHTML = ``;
+
+    for (let i = 0; i < participantes.length; i++) {
+        divzin.innerHTML += ` 
+                <li class="menu-li" onclick="selecionarContato(this)">
+                    <ion-icon name="person-circle"></ion-icon>
+                    <span>${participantes[i].name}</span>
+                    <img src="/imagens/check.png" class="hidden">
+                </li>
+            `;
+    }
+}
+
+function selecionarContato(element) {
+
+    const contato = document.querySelector(".participantes img.check")
+    const check = element.querySelector("img")
+    
+    if (contato !==null){
+        contato.classList.remove("check");
+        check.classList.add("check");
+    } 
+    check.classList.add("check")
+}
+
+function selecionarStatus(element){
+    const messageStatus = document.querySelector(".messageStatus img.check");
+    const check = element.querySelector("img");
+    
+    if(messageStatus !== null){
+        messageStatus.classList.remove("check");
+        check.classList.add("check");
+    }
+    check.classList.add("check");
+}
+
+function alertaErro(error) {
 
     console.log(error.response.status);
-    if (error.response.status === 404) {
-      alert("Não foi encontrado!");
+    if (error.response.status === 400) {
+        alert("o usuário já está logado!");
     }
-    //Quando falta algum campo na receita
-    if (error.response.status === 422) {
-      alert("Verique todos os campos da receita!");
-    }
-    //Quando o título já existe
-    if (error.response.status === 409) {
-      alert("Já existe uma receita com esse título!");
-    }
+
 }
 
 function hora() {
@@ -160,19 +184,13 @@ function hora() {
     let minutes = new Date().getMinutes();
     let seconds = new Date().getSeconds();
 
-    //console.log(hour, minutes, seconds)
     let time = `${hour}:${minutes}:${seconds}`
-    //console.log(time)
     return time
 }
 
 function chamarMenu() {
-
     const overlay = document.querySelector(".overlay")
     const menu = document.querySelector(".menu")
-
-    console.log(overlay)
-    console.log(menu)
 
     overlay.classList.add("show-menu")
     menu.classList.add("show-menu")
