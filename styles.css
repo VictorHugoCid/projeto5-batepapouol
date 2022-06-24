@@ -91,7 +91,7 @@ li {
    height: auto;
    background-color: #ffffff;
    margin-bottom: 4px;
-
+   /* word-break: break-word; AJUSTAR */
 
    display: flex;
    align-items: center;

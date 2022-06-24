@@ -2,20 +2,33 @@
 
 //    "https://mock-api.driven.com.br/api/v6/uol/messages"
 
+//let namePrompt = prompt("diga seu lindo nome")
+let namePrompt = {
+    name: "Victor Hugo"
+}  
+
 let msgServidor = [];
-buscarMensagens();
+
+logar();
+function logar(){
+
+    const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/participants`, namePrompt)
+
+    promise
+        .catch(alertaErro)
+        .then(buscarMensagens)
+}
 
 // etapa 1 - buscar msgs no servidor (API)
 function buscarMensagens() {
     console.log(`ordem de execução 1 - buscarMensagens`)
-    const promessa = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
+    const promessa = axios.get(`https://mock-api.driven.com.br/api/v6/uol/messages`);
 
     promessa.then(popularMsgServidor);
-
 }
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // etapa 2 - Jogar as mensagens do API na variável msgServidor
 
 function popularMsgServidor(resposta){
@@ -37,8 +50,10 @@ function plotarDoServidor() {
 
 
     console.log("orden de execução 3 - plotarDoServidor")
+    console.log(msgServidor)
 
     let ul = document.querySelector("ul.board");
+
 /* {
     from: "João",
     to: "Todos",
@@ -80,28 +95,34 @@ function plotarDoServidor() {
 
 // etapa 4 - cadastra msg para enviar AINDA NAO VOU FOCAR AQUI
 
-//let namePrompt = prompt("diga seu lindo nome")
-let namePrompt = "Victor"
+
 let msg;
 
 function enviar() {
     //pegar infos do input
     const msgInput = document.querySelector(".msg");
+
     msg = msgInput.value
+    console.log(msg)
 
     // colocar a msg no Objeto, nao consegui de outra forma
+    /*     {
+        from: "nome do usuário",
+        to: "nome do destinatário (Todos se não for um específico)",
+        text: "mensagem digitada",
+        type: "message" // ou "private_message" para o bônus
+    } */
+
     const novaMsg = {
-        //type: [{tipo: "status"}, {tipo: "message"}, {tipo: "private_message"}, {tipo: "reservada"}],
-        from: namePrompt,
+        from: namePrompt.name,
         to: "Todos",
         text: msg,
-        type: "default"       
+        type: "private_message"       
     }
+
     hora();
 
-    //msgServidor.push(msgObj)
-    //plotarDoServidor();
-
+    console.log(novaMsg)
     // etapa 5 - Mandar o post pro servidor
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages`,novaMsg);
 
@@ -115,6 +136,7 @@ function enviar() {
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 function alertaErro(error){
     alert("aconteceu algo")
 
