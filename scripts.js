@@ -4,7 +4,7 @@
 
 //let namePrompt = prompt("diga seu lindo nome")
 let namePrompt = {
-    name: "e"
+    name: "gabi"
 }
 
 let msgServidor = [];
@@ -13,20 +13,49 @@ let participantes = [];
 logar();
 buscarParticipantes();
 //setInterval(manterLog, 5000)
+//setInterval(buscarMensagens, 3000)
 
 function logar() {
 
+
+
+    /* primeiro post pro API */
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/participants`, namePrompt)
 
     promise
         .catch(alertaErro)
         .then(buscarMensagens)
+
+    //frufruDoLogin();
+
 }
+
+function frufruDoLogin() {
+    const button = document.querySelector(".entrada .button")
+    const input = document.querySelector(".entrada input")
+    const loader = document.querySelector(".entrada .loader")
+    const entrada = document.querySelector(".entrada")
+
+    button.classList.add("none")
+    button.classList.remove("button")
+    input.classList.add("none")
+    loader.classList.remove("none")
+
+    setTimeout(() => {
+        entrada.classList.add("none")
+        entrada.classList.remove("entrada")
+    }, 3000);
+
+    namePrompt = {
+        name: input.value
+    }
+}
+
 
 function manterLog() {
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/status`, namePrompt)
-
 }
+
 // etapa 1 - buscar msgs no servidor (API)
 function buscarMensagens() {
     console.log(`ordem de execução 1 - buscarMensagens`)
@@ -41,7 +70,6 @@ function buscarMensagens() {
 
 function popularMsgServidor(resposta) {
     console.log(`ordem de execução 2 - popularMsgServidor`)
-    //console.log(resposta)
     msgServidor = resposta.data
 
     plotarDoServidor();
@@ -53,7 +81,6 @@ function plotarDoServidor() {
 
 
     console.log("orden de execução 3 - plotarDoServidor")
-    //console.log(msgServidor)
 
     let ul = document.querySelector("ul.board");
 
@@ -66,30 +93,55 @@ function plotarDoServidor() {
     } */
 
     ul.innerHTML = ``;
-    for (let i = 0; i < msgServidor.length; i++) {
+    for (let i = 0; i <  msgServidor.length; i++) {
 
-        if (msgServidor[i].type !== "status") {
+        // COLOCAR CONDICIONAL DE RESERVADA
+        const tipo = msgServidor[i].type
+        const destino = msgServidor[i].to
+        const origem = msgServidor[i].from
+
+        if ((tipo === "private_message") && (destino === namePrompt.name || origem === namePrompt.name)) {
+            //plotar rosa
+            console.log("plotar rosa")
             ul.innerHTML += ` 
-            <li class="${msgServidor[i].type}">
-                <span class="tempo">(${msgServidor[i].time})</span>
-                    ${msgServidor[i].from} 
-                <span> 
-                    para 
-                </span> 
-                    ${msgServidor[i].to}
-                <span>${msgServidor[i].text}</span>
-            </li>
-            `;
-        } else {
-            ul.innerHTML += ` 
-            <li class="${msgServidor[i].type}">
-                <span class="tempo">(${msgServidor[i].time})</span>
-                ${msgServidor[i].from} 
-                <span>${msgServidor[i].text}</span>
-            </li>
-            `;
+                <li class="${tipo} message">
+                    <span class="tempo">(${msgServidor[i].time})</span>
+                        ${origem} 
+                    <span> 
+                        para 
+                    </span> 
+                        ${destino}
+                    <span>${msgServidor[i].text}</span>
+                </li>
+                `;
         }
+        if ((tipo === "message")) {
+            ul.innerHTML += ` 
+                <li class="${tipo} message">
+                    <span class="tempo">(${msgServidor[i].time})</span>
+                        ${origem} 
+                    <span> 
+                        para 
+                    </span> 
+                        ${destino}
+                    <span>${msgServidor[i].text}</span>
+                </li>
+                `;
+        } else if (tipo === "status") {
+            ul.innerHTML += ` 
+                <li class="${tipo} message">
+                    <span class="tempo">(${msgServidor[i].time})</span>
+                    ${origem} 
+                    <span>${msgServidor[i].text}</span>
+                </li>
+                `;
+        }
+
     }
+    console.log(msgServidor)
+    // RELOAD DAS MENSAGENS
+    // scroll da msg
+    scroll();
 }
 
 // etapa 4 - cadastra msg para enviar AINDA NAO VOU FOCAR AQUI
@@ -98,7 +150,6 @@ let msg;
 function enviar() {
     //pegar infos do input
     const msgInput = document.querySelector(".msg");
-
     msg = msgInput.value
 
     const novaMsg = {
@@ -107,13 +158,15 @@ function enviar() {
         text: msg,
         type: "message"
     }
-    hora();
     // etapa 5 - Mandar o post pro servidor
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages`, novaMsg);
     // etapa 6 - tratar erros/acertos
     promise
         .catch(alertaErro)
         .then(buscarMensagens)
+
+    buscarMensagens();
+    msgInput.value = ``;
 }
 
 function buscarParticipantes() {
@@ -131,7 +184,6 @@ function popularParticipantes(resposta) {
 function plotarParticipantes() {
 
     divzin = document.querySelector(".participantes div")
-    //console.log(divzin)
 
     divzin.innerHTML = ``;
 
@@ -150,23 +202,29 @@ function selecionarContato(element) {
 
     const contato = document.querySelector(".participantes img.check")
     const check = element.querySelector("img")
-    
-    if (contato !==null){
+
+    if (contato !== null) {
         contato.classList.remove("check");
         check.classList.add("check");
-    } 
+    }
     check.classList.add("check")
 }
 
-function selecionarStatus(element){
+function selecionarStatus(element) {
     const messageStatus = document.querySelector(".messageStatus img.check");
     const check = element.querySelector("img");
-    
-    if(messageStatus !== null){
+
+    if (messageStatus !== null) {
         messageStatus.classList.remove("check");
         check.classList.add("check");
     }
     check.classList.add("check");
+}
+
+function scroll() {
+    const chat = document.querySelector(".board")
+    const msgUltima = chat.lastElementChild
+    msgUltima.scrollIntoView();
 }
 
 function alertaErro(error) {
@@ -192,10 +250,17 @@ function chamarMenu() {
     const overlay = document.querySelector(".overlay")
     const menu = document.querySelector(".menu")
 
-    overlay.classList.add("show-menu")
+    overlay.classList.add("show-overlay")
     menu.classList.add("show-menu")
 }
 
+function atualizarBoard() {
+    setTimeout(buscarMensagens, 3000);
+    setInterval(buscarParticipantes, 10000);
+    setTimeout(manterLog, 5000);
+
+
+}
 function analisarCheck() {
     /* ESSA FUNÇÃO É PRO BONUS
     QUANDO TIVER COM CHECK NO MENU
@@ -203,3 +268,12 @@ function analisarCheck() {
     E O TIPO DA MSG */
 }
 
+function enterMessage(evento) {
+    const Tecla = evento.which;
+    if (Tecla == 13) {
+        document.querySelector(".footer ion-icon").click();
+    }
+   /*  if (Tecla == 13) {
+        document.querySelector(".entrada .button").click();
+    } */
+} 

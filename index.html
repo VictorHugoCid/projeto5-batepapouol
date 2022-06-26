@@ -14,12 +14,14 @@
 
 <body>
     <!-- ENTRADA -->
-   <!--  <div class="entrada">
+<!--     <div class="entrada">
         <img src="/imagens/logo-uol-entrada.png">
 
-        <input type="text" placeholder="Digite seu nome">
+        <input type="text" placeholder="Digite seu nome" onkeydown="enterMessage(event)">
 
-        <div>Entrar</div>
+        <div class="button" onclick="logar()">Entrar</div>
+
+        <div class="loader none">Loading...</div>
 
     </div> -->
 
@@ -33,17 +35,17 @@
             para enviar mensagem:</div>
 
         <ul class="participantes">
-            
-                <li class="menu-li" onclick="selecionarContato(this)">
-                    <ion-icon name="people"></ion-icon>
-                    <span>Todos</span>
-                    <img src="/imagens/check.png" class="hidden">
-                </li>
+
+            <li class="menu-li" onclick="selecionarContato(this)">
+                <ion-icon name="people"></ion-icon>
+                <span>Todos</span>
+                <img src="/imagens/check.png" class="hidden">
+            </li>
 
             <div>
-            
+
             </div>
-            
+
         </ul>
 
         <div class="menu-header">Escolha a visibilidade:</div>
@@ -78,10 +80,11 @@
 
     <ul class="board">
 
+
     </ul>
 
     <div class="footer">
-        <input type="text" class="msg" placeholder="Escreva...">
+        <input type="text" class="msg" placeholder="Escreva..." onkeydown="enterMessage(event)">
 
         <!-- VER COMO DIFERENCIA LETRA DO PLACEHOLDER COM A DO DIGITANDO -->
 
