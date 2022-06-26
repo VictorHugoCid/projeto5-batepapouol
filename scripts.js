@@ -1,59 +1,83 @@
 
-
-//    "https://mock-api.driven.com.br/api/v6/uol/messages"
-
 //let namePrompt = prompt("diga seu lindo nome")
+
 let namePrompt = {
-    name: "gabi"
+    name: "otoNome"
 }
 
+let msg;
+let nomeDestino;
 let msgServidor = [];
 let participantes = [];
 
-logar();
-buscarParticipantes();
-//setInterval(manterLog, 5000)
+//logar();
+//buscarParticipantes();
+//setInterval(manterLog, 5000);
 //setInterval(buscarMensagens, 3000)
 
 function logar() {
+    //const nomezin = document.querySelector(".entrada input").value
+    const nomezin = "Rod"
+    console.log(nomezin)
 
-
-
+    /* let namePrompt = {
+        name: nomezin
+    } */
     /* primeiro post pro API */
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/participants`, namePrompt)
 
     promise
-        .catch(alertaErro)
+        .catch(erroLogin)
         .then(buscarMensagens)
 
-    //frufruDoLogin();
+    /* frufruDoLogin();
+    setInterval(manterLog, 5000);
+    setInterval(buscarParticipantes,10000);
+    setInterval(buscarMensagens, 3000); */
 
 }
 
 function frufruDoLogin() {
-    const button = document.querySelector(".entrada .button")
-    const input = document.querySelector(".entrada input")
     const loader = document.querySelector(".entrada .loader")
     const entrada = document.querySelector(".entrada")
+    const loginContainer = document.querySelector(".loginContainer")
 
-    button.classList.add("none")
-    button.classList.remove("button")
-    input.classList.add("none")
+    loginContainer.classList.add("none")
     loader.classList.remove("none")
 
     setTimeout(() => {
         entrada.classList.add("none")
-        entrada.classList.remove("entrada")
     }, 3000);
 
-    namePrompt = {
-        name: input.value
-    }
+    /* namePrompt = {
+        name: nomezin
+    } */
 }
 
+function erroLogin(error) {
+
+    console.log(error.response.status);
+    setTimeout(() => {
+        if (error.response.status === 400) {
+            alert("Já existe um usuário logado com esse nome.");
+            const entrada = document.querySelector(".entrada")
+            const loginContainer = document.querySelector(".loginContainer")
+            const loader = document.querySelector(".entrada .loader")
+            //tirar none de todos
+            entrada.classList.remove("none")
+            loginContainer.classList.remove("none")
+            loader.classList.add("none")
+
+        }
+
+    }, 3000);
+
+}
 
 function manterLog() {
+
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/status`, namePrompt)
+
 }
 
 // etapa 1 - buscar msgs no servidor (API)
@@ -62,7 +86,7 @@ function buscarMensagens() {
     const promessa = axios.get(`https://mock-api.driven.com.br/api/v6/uol/messages`);
 
     promessa
-        .catch(alertaErro)
+        //.catch(alertaErro)
         .then(popularMsgServidor);
 }
 
@@ -93,7 +117,7 @@ function plotarDoServidor() {
     } */
 
     ul.innerHTML = ``;
-    for (let i = 0; i <  msgServidor.length; i++) {
+    for (let i = 0; i < msgServidor.length; i++) {
 
         // COLOCAR CONDICIONAL DE RESERVADA
         const tipo = msgServidor[i].type
@@ -145,34 +169,60 @@ function plotarDoServidor() {
 }
 
 // etapa 4 - cadastra msg para enviar AINDA NAO VOU FOCAR AQUI
-let msg;
 
 function enviar() {
+    //pegar infos do menu
+    const aux = document.querySelector(".participantes .check")
+    const destino = aux.previousElementSibling.innerHTML
+    
+    const aux2 = document.querySelector(".messageStatus .check")
+    const innerzin = aux2.previousElementSibling.innerHTML
+    let tipo;
+    if(innerzin === "Todos"){
+        tipo = "message"
+    }else{
+        tipo = "private_message"
+    }
+    
+     
     //pegar infos do input
     const msgInput = document.querySelector(".msg");
     msg = msgInput.value
 
     const novaMsg = {
         from: namePrompt.name,
-        to: "Todos",
+        to: destino,
         text: msg,
-        type: "message"
+        type: tipo
     }
     // etapa 5 - Mandar o post pro servidor
     const promise = axios.post(`https://mock-api.driven.com.br/api/v6/uol/messages`, novaMsg);
     // etapa 6 - tratar erros/acertos
     promise
-        .catch(alertaErro)
+        .catch(erroMessage)
         .then(buscarMensagens)
 
     buscarMensagens();
     msgInput.value = ``;
 }
 
+
+
+
+function erroMessage(error) {
+
+    console.log(error.response.status);
+    if (error.response.status === 400) {
+        console.log("erro de mensagem")
+        window.location.reload();
+    }
+}
+
+
 function buscarParticipantes() {
     const promise = axios.get(`https://mock-api.driven.com.br/api/v6/uol/participants`)
     promise
-        .catch(alertaErro)
+        //.catch(alertaErro)
         .then(popularParticipantes)
 }
 
@@ -183,32 +233,46 @@ function popularParticipantes(resposta) {
 
 function plotarParticipantes() {
 
+    console.log(participantes)
     divzin = document.querySelector(".participantes div")
 
-    divzin.innerHTML = ``;
+     divzin.innerHTML = ``;
 
     for (let i = 0; i < participantes.length; i++) {
         divzin.innerHTML += ` 
-                <li class="menu-li" onclick="selecionarContato(this)">
+                <li class="menu-li" onclick="selecionarContato(this)" data-identifier="participant">
                     <ion-icon name="person-circle"></ion-icon>
                     <span>${participantes[i].name}</span>
                     <img src="/imagens/check.png" class="hidden">
                 </li>
             `;
-    }
+    } 
+}
+
+function atribuirNome(texto){
+    nomeDestino = texto
+    //console.log(nomeDestino)
 }
 
 function selecionarContato(element) {
+    const participante = document.querySelector(".participantes .check")
+    //console.log(participante)
 
     const contato = document.querySelector(".participantes img.check")
+    const texto = element.querySelector(".participantes span").innerHTML
     const check = element.querySelector("img")
+    
 
     if (contato !== null) {
         contato.classList.remove("check");
         check.classList.add("check");
     }
     check.classList.add("check")
+
+    atribuirNome(texto);
 }
+
+
 
 function selecionarStatus(element) {
     const messageStatus = document.querySelector(".messageStatus img.check");
@@ -227,15 +291,6 @@ function scroll() {
     msgUltima.scrollIntoView();
 }
 
-function alertaErro(error) {
-
-    console.log(error.response.status);
-    if (error.response.status === 400) {
-        alert("o usuário já está logado!");
-    }
-
-}
-
 function hora() {
 
     let hour = new Date().getHours();
@@ -252,6 +307,14 @@ function chamarMenu() {
 
     overlay.classList.add("show-overlay")
     menu.classList.add("show-menu")
+}
+
+function fecharMenu(){
+    const overlay = document.querySelector(".overlay")
+    const menu = document.querySelector(".menu")
+
+    overlay.classList.remove("show-overlay")
+    menu.classList.remove("show-menu")
 }
 
 function atualizarBoard() {
@@ -273,7 +336,12 @@ function enterMessage(evento) {
     if (Tecla == 13) {
         document.querySelector(".footer ion-icon").click();
     }
-   /*  if (Tecla == 13) {
+}
+
+function enterLogin(evento) {
+    const Tecla = evento.which;
+
+    if (Tecla == 13) {
         document.querySelector(".entrada .button").click();
-    } */
-} 
+    }
+}

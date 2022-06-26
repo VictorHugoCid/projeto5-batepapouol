@@ -14,20 +14,24 @@
 
 <body>
     <!-- ENTRADA -->
-<!--     <div class="entrada">
+    <div class="entrada">
         <img src="/imagens/logo-uol-entrada.png">
 
-        <input type="text" placeholder="Digite seu nome" onkeydown="enterMessage(event)">
+        <div class="loginContainer">
+            <input type="text" placeholder="Digite seu nome" onkeydown="enterLogin(event)">
 
-        <div class="button" onclick="logar()">Entrar</div>
+            <div class="button" onclick="logar()">Entrar</div>
+
+        </div>
+
 
         <div class="loader none">Loading...</div>
 
-    </div> -->
+    </div>
 
     <!-- MENU e OVERLAY -->
 
-    <div class="overlay"></div>
+    <div class="overlay" onclick="fecharMenu()"></div>
 
     <div class="menu">
 
@@ -44,6 +48,7 @@
 
             <div>
 
+ 
             </div>
 
         </ul>
@@ -51,14 +56,14 @@
         <div class="menu-header">Escolha a visibilidade:</div>
 
         <ul class="messageStatus">
-            <li class="menu-li" onclick="selecionarStatus(this)">
+            <li class="menu-li" onclick="selecionarStatus(this)" data-identifier="visibility">
                 <ion-icon name="lock-open"></ion-icon>
                 <span>Todos</span>
                 <img src="/imagens/check.png" class="hidden">
 
             </li>
 
-            <li class="menu-li" onclick="selecionarStatus(this)">
+            <li class="menu-li" onclick="selecionarStatus(this)" data-identifier="visibility">
                 <ion-icon name="lock-closed"></ion-icon>
                 <span>Privada</span>
                 <img src="/imagens/check.png" class="hidden">
