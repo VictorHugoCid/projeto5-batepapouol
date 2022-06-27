@@ -30,12 +30,10 @@ body {
 }
 
 .board {
+   
    overflow: hidden;
 }
 
-.over{
-   overflow: visible;
-}
 
 .footer {
    width: 100%;
@@ -137,6 +135,7 @@ strong {
 /* bonus */
 /* overlay e menu */
 
+
 .overlay{
    width: 30%;
    height: 100%;
@@ -161,7 +160,7 @@ strong {
    z-index: 2;
    right: -70%;
    top: 0;
-
+   overflow-y: scroll;
    transition: all 1s;
 
 }
@@ -186,6 +185,8 @@ strong {
    align-items: center;
    font-size: 16px;
    font-weight: 700;
+
+   
 }
 
 .menu-li{
