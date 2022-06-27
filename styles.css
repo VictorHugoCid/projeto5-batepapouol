@@ -30,7 +30,6 @@ body {
 }
 
 .board {
-   
    overflow: hidden;
 }
 
@@ -59,6 +58,9 @@ body {
    height: 45px;
    margin-right: 20px;
 
+   cursor: pointer;
+
+
 }
 
 input {
@@ -84,6 +86,9 @@ input {
    height: 26px;
    margin-right: 20px;
    margin-left: 15px;
+
+   cursor: pointer;
+
 }
 
 li {
@@ -239,7 +244,8 @@ strong {
 
 }
 .entrada img{
-   width: 35%;
+   width: 130px;
+   height: 92px;
    margin-top:11% ;
    
 }
@@ -275,6 +281,8 @@ strong {
    display: flex;
    justify-content: center;
    align-items: center;
+
+   cursor: pointer;
 }
 
 /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
